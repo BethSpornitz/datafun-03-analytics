@@ -5,13 +5,14 @@ This project focuses on developing proficiency in Git for version control, manag
 import csv
 import pathlib 
 import os
+import json
 
 # External library imports (requires virtual environment)
 import requests
 
 # Local module imports     
 import bethspornitz_project_setup
-import bethspornitz_attr
+
 
 ###############################
 # Declare global variables
@@ -62,7 +63,7 @@ def fetch_and_write_txt_data(folder_name, filename, url):
         print(f"Failed to fetch data: {response.status_code}")
 
 # Example usage
-#fetch_and_write_txt_data('data', 'example.txt', 'https://openlibrary.org/works/OL123456W/Romeo_and_Juliet')
+#fetch_and_write_txt_data('data-txt', 'data-txt', 'https://openlibrary.org/works/OL123456W/Romeo_and_Juliet')
 
  ##############################
  #Excel
@@ -80,7 +81,7 @@ def fetch_and_write_excel_data(folder_name, filename, url):
     else:
         print(f"Failed to fetch Excel data: {response.status_code}")
 
-#Example:  fetch_and_write_excel_data(data_path, 'cattle.xls','https://github.com/bharathirajatut/sample-excel-dataset/raw/master/cattle.xls')
+#Example:  fetch_and_write_excel_data('data-excel', 'data-excel','https://github.com/bharathirajatut/sample-excel-dataset/raw/master/cattle.xls')
 
 ############################
 #CSV
@@ -101,7 +102,7 @@ def fetch_and_write_csv_data(folder_path, filename, url):
         print(f"Failed to fetch data: {response.status_code}")
 
 # Example usage
-#fetch_and_write_csv_data(data_path, 'data.csv', 'https://raw.githubusercontent.com/MainakRepositor/Datasets/master/World%20Happiness%20Data/2020.csv')
+#fetch_and_write_csv_data('data-csv', 'data-csv', 'https://raw.githubusercontent.com/MainakRepositor/Datasets/master/World%20Happiness%20Data/2020.csv')
 
 ################
 #JSON
@@ -122,7 +123,7 @@ def fetch_and_write_json_data(folder_path, filename, url):
     else:
         print(f"Failed to fetch data: {response.status_code}")
 
-# Example usage
+# Example usage with correct folder path and filename
 fetch_and_write_json_data(data_path, 'data.json', 'http://api.open-notify.org/astros.json')
 
 """
@@ -141,7 +142,7 @@ def main():
 
     print(f"Name: {yourname_attr.my_name_string}")
 
-    txt_url = 'https://shakespeare.mit.edu/romeo_juliet/full.html'
+    txt_url = 'https://openlibrary.org/works/OL123456W/Romeo_and_Juliet'
 
     csv_url = 'https://raw.githubusercontent.com/MainakRepositor/Datasets/master/World%20Happiness%20Data/2020.csv' 
 
