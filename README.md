@@ -1,4 +1,26 @@
-# datafun-03-project
+# Working with Data
+
+## Overview
+
+Project 3 focuses on developing proficiency in Git for version control, managing Python virtual environments, and handling various types of data. The project entails retrieving data from the web, processing it with suitable Python collections, and saving the processed data to files.
+
+## Features
+
+- Retrieving data from the web
+- Handling different data types
+- Save extracted data to data files including CSV or JSON files
+
+## Installation
+
+Requires installation of:
+reports
+
+## Clone the Repository
+
+git clone https://github.com/BethSpornitz/datafun-03-analytics
+
+## Usage
+
 
 ## Create Project Virtual Environment
 
