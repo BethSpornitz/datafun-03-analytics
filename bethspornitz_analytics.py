@@ -103,6 +103,27 @@ def fetch_and_write_csv_data(folder_path, filename, url):
 # Example usage
 #fetch_and_write_csv_data(data_path, 'data.csv', 'https://raw.githubusercontent.com/MainakRepositor/Datasets/master/World%20Happiness%20Data/2020.csv')
 
+################
+#JSON
+###############
+
+def write_json_file(folder_path, filename, data):
+    file_path = pathlib.Path(folder_path).joinpath(filename)
+    with file_path.open('w', encoding='utf-8') as file:
+        json.dump(data, file, ensure_ascii=False, indent=4)
+        print(f"JSON data saved to {file_path}")
+
+def fetch_and_write_json_data(folder_path, filename, url):
+    # Fetch the data from the given URL
+    response = requests.get(url)
+    if response.status_code == 200:  
+        json_data = response.json()  # Parse the JSON response content
+        write_json_file(folder_path, filename, json_data)
+    else:
+        print(f"Failed to fetch data: {response.status_code}")
+
+# Example usage
+fetch_and_write_json_data(data_path, 'data.json', 'http://api.open-notify.org/astros.json')
 
 """
 #####################################
