@@ -13,7 +13,7 @@ Project 3 focuses on developing proficiency in Git for version control, managing
 ## Installation
 
 Requires installation of:
-reports
+requests
 
 ## Clone the Repository
 

@@ -6,4 +6,5 @@ import pathlib
 import requests  
 
 # Local module imports     
-import bethspornitz_projsetup 
+import bethspornitz_project_setup
+import utils_bethspornitz
