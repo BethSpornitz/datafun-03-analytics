@@ -86,6 +86,23 @@ def fetch_and_write_excel_data(folder_name, filename, url):
 #CSV
 ###########################
 
+def write_csv_file(folder_path, filename, data):
+    file_path = pathlib.Path(folder_path).joinpath(filename)
+    with file_path.open('w', encoding='utf-8') as file:
+        file.write(data)
+        print(f"CSV data saved to {file_path}")
+
+def fetch_and_write_csv_data(folder_path, filename, url):
+    # Fetch the data from the given URL
+    response = requests.get(url)
+    if response.status_code == 200:  
+        write_csv_file(folder_path, filename, response.text)
+    else:
+        print(f"Failed to fetch data: {response.status_code}")
+
+# Example usage
+#fetch_and_write_csv_data(data_path, 'data.csv', 'https://raw.githubusercontent.com/MainakRepositor/Datasets/master/World%20Happiness%20Data/2020.csv')
+
 
 """
 #####################################
