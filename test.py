@@ -28,21 +28,17 @@ data_path = project_path.joinpath('data')
 # Create the data path if it doesn't exist, otherwise do nothing
 data_path.mkdir(exist_ok=True)
 
-
-# Write function for txt file to be used in fetch_and_write
-def write_txt_file(folder_name, filename, data):
-    file_path = pathlib.Path(folder_name).joinpath(filename)
-    with file_path.open('w', encoding='utf-8') as file:
+def write_excel_file(folder_name, filename, data):
+    file_path = pathlib.Path(folder_name).joinpath(filename) # use pathlib to join paths
+    with open(file_path, 'wb') as file:
         file.write(data)
-        print(f"Text data saved to {file_path}")
+        print(f"Excel data saved to {file_path}")
 
-def fetch_and_write_txt_data(folder_name, filename, url):
-    # Fetch the data from the given URL
+def fetch_and_write_excel_data(folder_name, filename, url):
     response = requests.get(url)
-    if response.status_code == 200:  
-        write_txt_file(folder_name, filename, response.text)
+    if response.status_code == 200:
+        write_excel_file(folder_name, filename, response.content)
     else:
-        print(f"Failed to fetch data: {response.status_code}")
+        print(f"Failed to fetch Excel data: {response.status_code}")
 
-# Example usage
-#fetch_and_write_txt_data('data', 'example.txt', 'https://openlibrary.org/works/OL123456W/Romeo_and_Juliet')
+#Example:  fetch_and_write_excel_data(data_path, 'cattle.xls','https://github.com/bharathirajatut/sample-excel-dataset/raw/master/cattle.xls')

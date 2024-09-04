@@ -11,6 +11,7 @@ import requests
 
 # Local module imports     
 import bethspornitz_project_setup
+import bethspornitz_attr
 
 ###############################
 # Declare global variables
@@ -41,6 +42,9 @@ def create_prefixed_folders(folder_list: list, prefix: str) -> None:
 
 
 
+ ##############################
+ #txt
+ ##############################
 
 # Write function for txt file to be used in fetch_and_write
 def write_txt_file(folder_name, filename, data):
@@ -60,7 +64,29 @@ def fetch_and_write_txt_data(folder_name, filename, url):
 # Example usage
 #fetch_and_write_txt_data('data', 'example.txt', 'https://openlibrary.org/works/OL123456W/Romeo_and_Juliet')
 
- 
+ ##############################
+ #Excel
+ ##############################
+def write_excel_file(folder_name, filename, data):
+    file_path = pathlib.Path(folder_name).joinpath(filename) # use pathlib to join paths
+    with open(file_path, 'wb') as file:
+        file.write(data)
+        print(f"Excel data saved to {file_path}")
+
+def fetch_and_write_excel_data(folder_name, filename, url):
+    response = requests.get(url)
+    if response.status_code == 200:
+        write_excel_file(folder_name, filename, response.content)
+    else:
+        print(f"Failed to fetch Excel data: {response.status_code}")
+
+#Example:  fetch_and_write_excel_data(data_path, 'cattle.xls','https://github.com/bharathirajatut/sample-excel-dataset/raw/master/cattle.xls')
+
+############################
+#CSV
+###########################
+
+
 """
 #####################################
 # Define a main() function for this module.
