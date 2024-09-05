@@ -8,6 +8,7 @@ import os
 import json
 import re
 from collections import Counter
+import pandas as pd
 
 # External library imports (requires virtual environment)
 import requests
@@ -138,8 +139,9 @@ def write_excel_file(folder_name, filename, data):
     except Exception as e:
         print(f"An unexpected error occurred while writing file: {e}")
     finally:
-        # Code in this block will run regardless of whether an exception occurred
         print("Write operation attempted.")
+    
+    return file_path  # Return the file path for further analysis
 
 def fetch_and_write_excel_data(folder_name, filename, url):
     try:
@@ -147,7 +149,11 @@ def fetch_and_write_excel_data(folder_name, filename, url):
         response.raise_for_status()  # Raise HTTPError for bad responses
         
         # Attempt to write the fetched data to a file
-        write_excel_file(folder_name, filename, response.content)
+        file_path = write_excel_file(folder_name, filename, response.content)
+        
+        # Perform data analysis after saving the file
+        analyze_excel_data(file_path)
+        
     except requests.RequestException as e:
         print(f"RequestException occurred while fetching data: {e}")
     except ValueError as e:
@@ -155,11 +161,28 @@ def fetch_and_write_excel_data(folder_name, filename, url):
     except Exception as e:
         print(f"An unexpected error occurred while fetching data: {e}")
     finally:
-        # Code in this block will run regardless of whether an exception occurred
         print("Fetch operation attempted.")
+
+def analyze_excel_data(file_path):
+    try:
+        # Load the Excel file into a pandas DataFrame using xlrd for .xls files
+        df = pd.read_excel(file_path, engine='xlrd')
+        
+        # Display basic info about the data
+        print("\nData Preview:")
+        print(df.head())  # Show the first 5 rows of the data
+        
+        print("\nSummary Statistics:")
+        print(df.describe())  # Show summary statistics for numerical columns
+        
+        # Perform any additional analysis here
+        
+    except Exception as e:
+        print(f"An error occurred while analyzing the Excel data: {e}")
 
 # Example usage
 fetch_and_write_excel_data('data-excel', 'data-excel.xls', 'https://github.com/bharathirajatut/sample-excel-dataset/raw/master/cattle.xls')
+
 
 ############################
 # CSV
