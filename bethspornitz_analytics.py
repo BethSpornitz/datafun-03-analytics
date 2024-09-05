@@ -3,16 +3,19 @@ This project focuses on developing proficiency in Git for version control, manag
  '''
 # Standard library imports
 import csv
-import pathlib 
+import pathlib
 import os
 import json
 
 # External library imports (requires virtual environment)
 import requests
 
-# Local module imports     
-import bethspornitz_project_setup
+# Ensure SSL certificates are handled properly
+import requests.packages.urllib3.contrib.pyopenssl
+requests.packages.urllib3.contrib.pyopenssl.inject_into_urllib3()
 
+# Local module imports
+import bethspornitz_project_setup
 
 ###############################
 # Declare global variables
@@ -24,52 +27,57 @@ project_path = pathlib.Path.cwd()
 # Create a project data path object
 data_path = project_path.joinpath('data')
 
-# Create the data path if it doesn't exist, otherwise do nothing
+# Create the data path if it doesn't exist
 data_path.mkdir(exist_ok=True)
 
-
-# Create a function to create prefixed folders by transforming a list of names and combining each with a prefix (e.g., "data-").
-# Pass in a list of folder names
-# Pass in a prefix (e.g. 'data-') to add to each
+###############################
+# Create prefixed folders
+###############################
 
 def create_prefixed_folders(folder_list: list, prefix: str) -> None:
     for folder_name in folder_list:
         # Create the full folder name with prefix
-        full_folder_name = f"{prefix}_{folder_name}"
+        full_folder_name = f"{prefix}{folder_name}"
         # Create the directory
         os.makedirs(full_folder_name, exist_ok=True)
         # Print the confirmation message
         print(f"Created folder: {full_folder_name}")
 
+# Call function to create folders using a prefix
+folder_names = ['csv', 'excel', 'json', 'txt']
+prefix = 'data-'
+create_prefixed_folders(folder_names, prefix)
 
+##############################
+# TXT
+##############################
 
- ##############################
- #txt
- ##############################
-
-# Write function for txt file to be used in fetch_and_write
 def write_txt_file(folder_name, filename, data):
-    file_path = pathlib.Path(folder_name).joinpath(filename)
+    folder_path = pathlib.Path(folder_name)
+    folder_path.mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
+    file_path = folder_path.joinpath(filename)
     with file_path.open('w', encoding='utf-8') as file:
         file.write(data)
         print(f"Text data saved to {file_path}")
 
 def fetch_and_write_txt_data(folder_name, filename, url):
-# Fetch the data from the given URL
     response = requests.get(url)
-    if response.status_code == 200:  
+    if response.status_code == 200:
         write_txt_file(folder_name, filename, response.text)
     else:
         print(f"Failed to fetch data: {response.status_code}")
 
 # Example usage
-#fetch_and_write_txt_data('data-txt', 'data-txt', 'https://openlibrary.org/works/OL123456W/Romeo_and_Juliet')
+fetch_and_write_txt_data('data-txt', 'data-txt.txt', 'https://www.gutenberg.org/cache/epub/1513/pg1513.txt')
 
- ##############################
- #Excel
- ##############################
+##############################
+# Excel
+##############################
+
 def write_excel_file(folder_name, filename, data):
-    file_path = pathlib.Path(folder_name).joinpath(filename) # use pathlib to join paths
+    folder_path = pathlib.Path(folder_name)
+    folder_path.mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
+    file_path = folder_path.joinpath(filename)
     with open(file_path, 'wb') as file:
         file.write(data)
         print(f"Excel data saved to {file_path}")
@@ -81,49 +89,52 @@ def fetch_and_write_excel_data(folder_name, filename, url):
     else:
         print(f"Failed to fetch Excel data: {response.status_code}")
 
-#Example:  fetch_and_write_excel_data('data-excel', 'data-excel','https://github.com/bharathirajatut/sample-excel-dataset/raw/master/cattle.xls')
+# Example usage
+fetch_and_write_excel_data('data-excel', 'data-excel.xls', 'https://github.com/bharathirajatut/sample-excel-dataset/raw/master/cattle.xls')
 
 ############################
-#CSV
+# CSV
 ###########################
 
 def write_csv_file(folder_path, filename, data):
-    file_path = pathlib.Path(folder_path).joinpath(filename)
+    folder_path = pathlib.Path(folder_path)
+    folder_path.mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
+    file_path = folder_path.joinpath(filename)
     with file_path.open('w', encoding='utf-8') as file:
         file.write(data)
         print(f"CSV data saved to {file_path}")
 
 def fetch_and_write_csv_data(folder_path, filename, url):
-    # Fetch the data from the given URL
     response = requests.get(url)
-    if response.status_code == 200:  
+    if response.status_code == 200:
         write_csv_file(folder_path, filename, response.text)
     else:
         print(f"Failed to fetch data: {response.status_code}")
 
 # Example usage
-#fetch_and_write_csv_data('data-csv', 'data-csv', 'https://raw.githubusercontent.com/MainakRepositor/Datasets/master/World%20Happiness%20Data/2020.csv')
+fetch_and_write_csv_data('data-csv', 'data-csv.csv', 'https://raw.githubusercontent.com/MainakRepositor/Datasets/master/World%20Happiness%20Data/2020.csv')
 
 ################
-#JSON
+# JSON
 ###############
 
 def write_json_file(folder_path, filename, data):
-    file_path = pathlib.Path(folder_path).joinpath(filename)
+    folder_path = pathlib.Path(folder_path)
+    folder_path.mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
+    file_path = folder_path.joinpath(filename)
     with file_path.open('w', encoding='utf-8') as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
         print(f"JSON data saved to {file_path}")
 
 def fetch_and_write_json_data(folder_path, filename, url):
-    # Fetch the data from the given URL
     response = requests.get(url)
-    if response.status_code == 200:  
+    if response.status_code == 200:
         json_data = response.json()  # Parse the JSON response content
         write_json_file(folder_path, filename, json_data)
     else:
         print(f"Failed to fetch data: {response.status_code}")
 
-# Example usage with correct folder path and filename
+# Example usage
 fetch_and_write_json_data(data_path, 'data.json', 'http://api.open-notify.org/astros.json')
 
 """
@@ -133,12 +144,6 @@ fetch_and_write_json_data(data_path, 'data.json', 'http://api.open-notify.org/as
 
 def main():
     ''' Main function to demonstrate module capabilities. '''
-
- # Call function to create folders using a prefix
-    folder_names = ['csv', 'excel', 'json', 'txt']
-    prefix = 'data-'
-    create_prefixed_folders(folder_names, prefix)
-
 
     print(f"Name: {yourname_attr.my_name_string}")
 
