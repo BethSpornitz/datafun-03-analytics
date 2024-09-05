@@ -3,6 +3,8 @@ import csv
 import pathlib
 import os
 import json
+import re
+from collections import Counter
 
 # External library imports (requires virtual environment)
 import requests
@@ -61,11 +63,58 @@ def fetch_and_write_txt_data(folder_name, filename, url):
     response = requests.get(url)
     if response.status_code == 200:
         write_txt_file(folder_name, filename, response.text)
+        return response.text
     else:
         print(f"Failed to fetch data: {response.status_code}")
 
+def process_text_data(text):
+    # Remove non-alphabetic characters and make lowercase
+    text = re.sub(r'[^A-Za-z\s]', '', text).lower()
+
+    # Split the text into words
+    words = text.split()
+
+    # Get word count and unique words using set
+    word_count = len(words)
+    unique_words = set(words)
+
+    # Get frequency of each word
+    word_freq = Counter(words)
+
+    # Sort words by frequency
+    sorted_word_freq = sorted(word_freq.items(), key=lambda x: x[1], reverse=True)
+
+    return word_count, unique_words, sorted_word_freq
+
+def analyze_text(folder_name, filename, url):
+    # Fetch the text data from the URL
+    text_data = fetch_and_write_txt_data(folder_name, filename, url)
+    
+    if text_data:
+        # Process the text data
+        word_count, unique_words, sorted_word_freq = process_text_data(text_data)
+
+        # Prepare the analysis results
+        analysis = (
+            f"Total Word Count: {word_count}\n"
+            f"Unique Words Count: {len(unique_words)}\n\n"
+            "Top 10 Most Frequent Words:\n"
+        )
+
+        # Append top 10 words by frequency
+        for word, freq in sorted_word_freq[:10]:
+            analysis += f"{word}: {freq}\n"
+
+        # Save the analysis to a file
+        write_txt_file(folder_name, f"analysis_{filename}", analysis)
+
 # Example usage
 fetch_and_write_txt_data('data-txt', 'data-txt.txt', 'https://www.gutenberg.org/cache/epub/1513/pg1513.txt')
+
+# Example usage
+analyze_text('data-txt', 'data-txt.txt', 'https://www.gutenberg.org/cache/epub/1513/pg1513.txt')
+
+
 
 ##############################
 # Excel

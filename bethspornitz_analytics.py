@@ -6,6 +6,8 @@ import csv
 import pathlib
 import os
 import json
+import re
+from collections import Counter
 
 # External library imports (requires virtual environment)
 import requests
@@ -64,30 +66,97 @@ def fetch_and_write_txt_data(folder_name, filename, url):
     response = requests.get(url)
     if response.status_code == 200:
         write_txt_file(folder_name, filename, response.text)
+        return response.text
     else:
         print(f"Failed to fetch data: {response.status_code}")
 
+def process_text_data(text):
+    # Remove non-alphabetic characters and make lowercase
+    text = re.sub(r'[^A-Za-z\s]', '', text).lower()
+
+    # Split the text into words
+    words = text.split()
+
+    # Get word count and unique words using set
+    word_count = len(words)
+    unique_words = set(words)
+
+    # Get frequency of each word
+    word_freq = Counter(words)
+
+    # Sort words by frequency
+    sorted_word_freq = sorted(word_freq.items(), key=lambda x: x[1], reverse=True)
+
+    return word_count, unique_words, sorted_word_freq
+
+def analyze_text(folder_name, filename, url):
+    # Fetch the text data from the URL
+    text_data = fetch_and_write_txt_data(folder_name, filename, url)
+    
+    if text_data:
+        # Process the text data
+        word_count, unique_words, sorted_word_freq = process_text_data(text_data)
+
+        # Prepare the analysis results
+        analysis = (
+            f"Total Word Count: {word_count}\n"
+            f"Unique Words Count: {len(unique_words)}\n\n"
+            "Top 10 Most Frequent Words:\n"
+        )
+
+        # Append top 10 words by frequency
+        for word, freq in sorted_word_freq[:10]:
+            analysis += f"{word}: {freq}\n"
+
+        # Save the analysis to a file
+        write_txt_file(folder_name, f"analysis_{filename}", analysis)
+
 # Example usage
 fetch_and_write_txt_data('data-txt', 'data-txt.txt', 'https://www.gutenberg.org/cache/epub/1513/pg1513.txt')
+
+# Example usage
+analyze_text('data-txt', 'data-txt.txt', 'https://www.gutenberg.org/cache/epub/1513/pg1513.txt')
 
 ##############################
 # Excel
 ##############################
 
 def write_excel_file(folder_name, filename, data):
-    folder_path = pathlib.Path(folder_name)
-    folder_path.mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
-    file_path = folder_path.joinpath(filename)
-    with open(file_path, 'wb') as file:
-        file.write(data)
-        print(f"Excel data saved to {file_path}")
+    file_path = pathlib.Path(folder_name).joinpath(filename)
+    try:
+        folder_path = pathlib.Path(folder_name)
+        folder_path.mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
+        
+        # Attempt to open and write the file
+        with open(file_path, 'wb') as file:
+            file.write(data)
+            print(f"Excel data saved to {file_path}")
+    except IOError as e:
+        print(f"IOError occurred while writing file: {e}")
+    except OSError as e:
+        print(f"OSError occurred while creating directories: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred while writing file: {e}")
+    finally:
+        # Code in this block will run regardless of whether an exception occurred
+        print("Write operation attempted.")
 
 def fetch_and_write_excel_data(folder_name, filename, url):
-    response = requests.get(url)
-    if response.status_code == 200:
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise HTTPError for bad responses
+        
+        # Attempt to write the fetched data to a file
         write_excel_file(folder_name, filename, response.content)
-    else:
-        print(f"Failed to fetch Excel data: {response.status_code}")
+    except requests.RequestException as e:
+        print(f"RequestException occurred while fetching data: {e}")
+    except ValueError as e:
+        print(f"ValueError occurred while processing response content: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred while fetching data: {e}")
+    finally:
+        # Code in this block will run regardless of whether an exception occurred
+        print("Fetch operation attempted.")
 
 # Example usage
 fetch_and_write_excel_data('data-excel', 'data-excel.xls', 'https://github.com/bharathirajatut/sample-excel-dataset/raw/master/cattle.xls')
@@ -98,7 +167,7 @@ fetch_and_write_excel_data('data-excel', 'data-excel.xls', 'https://github.com/b
 
 def write_csv_file(folder_path, filename, data):
     folder_path = pathlib.Path(folder_path)
-    folder_path.mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
+    folder_path.mkdir(parents=True, exist_ok=True)
     file_path = folder_path.joinpath(filename)
     with file_path.open('w', encoding='utf-8') as file:
         file.write(data)
@@ -138,7 +207,7 @@ def fetch_and_write_json_data(folder_path, filename, url):
 fetch_and_write_json_data(data_path, 'data.json', 'http://api.open-notify.org/astros.json')
 
 """
-#####################################
+#####################################sou
 # Define a main() function for this module.
 #####################################
 
