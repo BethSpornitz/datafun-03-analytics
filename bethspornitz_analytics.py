@@ -128,7 +128,7 @@ fetch_and_write_txt_data('data-txt', 'data-txt.txt', 'https://www.gutenberg.org/
 # Example usage
 analyze_text('data-txt', 'data-txt.txt', 'https://www.gutenberg.org/cache/epub/1513/pg1513.txt')
 '''
-
+'''
 ##############################
 # Excel
 ##############################
@@ -221,8 +221,6 @@ def analyze_excel_data(file_path, output_folder='data-output'):
         plt.savefig(f'{output_folder}/histogram.png')  # Save plot as an image
         plt.show()
         
-#TODO: Perform any additional analysis here
-        
     except Exception as e:
         print(f"An error occurred while analyzing the Excel data: {e}")
 
@@ -234,6 +232,7 @@ fetch_and_write_excel_data('data-excel', 'data-excel.xls', 'https://github.com/b
 ############################
 # CSV
 ###########################
+
 
 def write_csv_file(folder_path, filename, data):
     folder_path = pathlib.Path(folder_path)
@@ -266,12 +265,34 @@ def process_csv_data(folder_path, filename):
     insights.append("\n\nSummary Statistics:\n")
     insights.append(df.describe().to_string())  # Add summary stats for numeric columns
 
-    # Example: Analyzing specific column (e.g., Happiness Score)
-    if 'Happiness Score' in df.columns:
-        avg_happiness = df['Happiness Score'].mean()
+    # Example: Analyzing specific column - Ladder/Happiness Score
+    if 'Ladder score' in df.columns:
+        avg_happiness = df['Ladder score'].mean()
         insights.append(f"\n\nAverage Happiness Score: {avg_happiness:.2f}")
 
-    # Add more analysis as needed (e.g., top countries by happiness score, correlations, etc.)
+    def find_top_countries_by_happiness(csv_file_path, top_n=10):
+        try:
+            # Load the CSV file into a DataFrame
+            df = pd.read_csv(csv_file_path)
+        
+            # Rename the column 'Ladder score' to 'Happiness Score'
+            df.rename(columns={'Ladder score': 'Happiness Score'}, inplace=True)
+        
+            # Sort the DataFrame by Happiness Score in descending order
+            sorted_df = df.sort_values(by='Happiness Score', ascending=False)
+        
+            # Get the top_n countries
+            top_countries = sorted_df.head(top_n)
+        
+            # Append the results to insights with the new column name
+            insights.append("\nTop Countries by Happiness Score:\n")
+            insights.append(top_countries[['Country name', 'Happiness Score']].to_string(index=False))
+        
+        except Exception as e:
+            print(f"An error occurred while finding top countries: {e}")
+
+    # Call the function to find top countries
+    find_top_countries_by_happiness(file_path)
 
     # Save insights to a text file
     save_insights_to_file(folder_path, 'insights.txt', insights)
@@ -284,7 +305,7 @@ def save_insights_to_file(folder_path, filename, insights):
 
 # Example usage
 fetch_and_write_csv_data('data-csv', 'data-csv.csv', 'https://raw.githubusercontent.com/MainakRepositor/Datasets/master/World%20Happiness%20Data/2020.csv')
-
+'''
 ################
 # JSON
 ###############
@@ -377,10 +398,10 @@ def main():
     # Find some data you care about. What format is it? How will you ingest the data?
     # What do you want to extract and write? What export format will you use?
     # Process at least TWO unique data sets and describe your work clearly.
-    # Use the README.md and your code to showcase your ability to work with data."""
+    # Use the README.md and your code to showcase your ability to work with data.
 #####################################
 # Conditional Execution
 #####################################
 
 if __name__ == '__main__':
-    main()
+    main()"""
