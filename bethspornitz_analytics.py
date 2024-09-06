@@ -59,7 +59,7 @@ create_prefixed_folders(folder_names, prefix)
 
 def write_txt_file(folder_name, filename, data):
     folder_path = pathlib.Path(folder_name)
-    folder_path.mkdir(parents=True, exist_ok=True)
+    folder_path.mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
     file_path = folder_path.joinpath(filename)
     with file_path.open('w', encoding='utf-8') as file:
         file.write(data)
@@ -72,13 +72,14 @@ def fetch_and_write_txt_data(folder_name, filename, url):
         return response.text
     else:
         print(f"Failed to fetch data: {response.status_code}")
+        return None
 
 def process_text_data(text):
-    # Remove non-alphabetic characters and make lowercase - ensures all words are treated the same and ingores special characters
-    text = re.sub(r'[^A-Za-z\s]', '', text).lower()
+    # Remove non-alphabetic characters and make lowercase
+    clean_text = re.sub(r'[^A-Za-z\s]', '', text).lower()
 
-    # Split the text into words - breaks strings of texts into smaller pieces - helps with data cleaning
-    words = text.split()
+    # Split the text into words
+    words = clean_text.split()
 
     # Get word count and unique words using set
     word_count = len(words)
@@ -90,7 +91,10 @@ def process_text_data(text):
     # Sort words by frequency
     sorted_word_freq = sorted(word_freq.items(), key=lambda x: x[1], reverse=True)
 
-    return word_count, unique_words, sorted_word_freq
+    # Count the total number of alphabetic characters (letters)
+    letter_count = sum(1 for char in text if char.isalpha())
+
+    return word_count, unique_words, sorted_word_freq, letter_count
 
 def analyze_text(folder_name, filename, url):
     # Fetch the text data from the URL
@@ -98,22 +102,26 @@ def analyze_text(folder_name, filename, url):
     
     if text_data:
         # Process the text data
-        word_count, unique_words, sorted_word_freq = process_text_data(text_data)
+        word_count, unique_words, sorted_word_freq, letter_count = process_text_data(text_data)
 
         # Prepare the analysis results
         analysis = (
             f"Total Word Count: {word_count}\n"
-            f"Unique Words Count: {len(unique_words)}\n\n"
+            f"Unique Words Count: {len(unique_words)}\n"
+            f"Total Letter Count: {letter_count}\n\n"
             "Top 10 Most Frequent Words:\n"
         )
 
-        # Append top 10 words by frequency
+         # Append top 10 words by frequency
         for word, freq in sorted_word_freq[:10]:
             analysis += f"{word}: {freq}\n"
-#TODO Add Additional Analysis
 
         # Save the analysis to a file
         write_txt_file(folder_name, f"analysis_{filename}", analysis)
+
+# Example usage for TXT
+fetch_and_write_txt_data('data-txt', 'data-txt.txt', 'https://www.gutenberg.org/cache/epub/1513/pg1513.txt')
+analyze_text('data-txt', 'data-txt.txt', 'https://www.gutenberg.org/cache/epub/1513/pg1513.txt')
 
 #TODO:Move these down below with other functions
 # Example usage
@@ -229,7 +237,7 @@ def process_csv_data(folder_path, filename):
         avg_happiness = df['Happiness Score'].mean()
         insights.append(f"\n\nAverage Happiness Score: {avg_happiness:.2f}")
 
-#TODO: Add more analysis
+    # Add more analysis as needed (e.g., top countries by happiness score, correlations, etc.)
 
     # Save insights to a text file
     save_insights_to_file(folder_path, 'insights.txt', insights)
@@ -240,10 +248,8 @@ def save_insights_to_file(folder_path, filename, insights):
         file.write("\n".join(insights))
     print(f"Insights saved to {file_path}")
 
-#TODO:Add this below
 # Example usage
 fetch_and_write_csv_data('data-csv', 'data-csv.csv', 'https://raw.githubusercontent.com/MainakRepositor/Datasets/master/World%20Happiness%20Data/2020.csv')
-
 
 ################
 # JSON
