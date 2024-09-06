@@ -164,7 +164,7 @@ def fetch_and_write_excel_data(folder_name, filename, url):
 
 def analyze_excel_data(file_path):
     try:
-        # Load the Excel file into a pandas DataFrame using xlrd for .xls files
+        # Load the Excel file into a pandas DataFrame using xlrd for .xls files - must pip install xlrd
         df = pd.read_excel(file_path, engine='xlrd')
         
         # Display basic info about the data
@@ -198,8 +198,40 @@ def fetch_and_write_csv_data(folder_path, filename, url):
     response = requests.get(url)
     if response.status_code == 200:
         write_csv_file(folder_path, filename, response.text)
+        process_csv_data(folder_path, filename)  # Process data after saving
     else:
         print(f"Failed to fetch data: {response.status_code}")
+
+def process_csv_data(folder_path, filename):
+    # Load the CSV data using pandas
+    file_path = pathlib.Path(folder_path).joinpath(filename)
+    df = pd.read_csv(file_path)
+    
+    # Perform basic analysis
+    insights = []
+
+    # Example: Data Preview and Summary Statistics
+    insights.append("Data Preview:\n")
+    insights.append(df.head().to_string())  # Add first few rows
+
+    insights.append("\n\nSummary Statistics:\n")
+    insights.append(df.describe().to_string())  # Add summary stats for numeric columns
+
+    # Example: Analyzing specific column (e.g., Happiness Score)
+    if 'Happiness Score' in df.columns:
+        avg_happiness = df['Happiness Score'].mean()
+        insights.append(f"\n\nAverage Happiness Score: {avg_happiness:.2f}")
+
+    # Add more analysis as needed (e.g., top countries by happiness score, correlations, etc.)
+
+    # Save insights to a text file
+    save_insights_to_file(folder_path, 'insights.txt', insights)
+
+def save_insights_to_file(folder_path, filename, insights):
+    file_path = pathlib.Path(folder_path).joinpath(filename)
+    with file_path.open('w', encoding='utf-8') as file:
+        file.write("\n".join(insights))
+    print(f"Insights saved to {file_path}")
 
 # Example usage
 fetch_and_write_csv_data('data-csv', 'data-csv.csv', 'https://raw.githubusercontent.com/MainakRepositor/Datasets/master/World%20Happiness%20Data/2020.csv')
@@ -207,6 +239,7 @@ fetch_and_write_csv_data('data-csv', 'data-csv.csv', 'https://raw.githubusercont
 ################
 # JSON
 ###############
+
 
 def write_json_file(folder_path, filename, data):
     folder_path = pathlib.Path(folder_path)
@@ -221,8 +254,34 @@ def fetch_and_write_json_data(folder_path, filename, url):
     if response.status_code == 200:
         json_data = response.json()  # Parse the JSON response content
         write_json_file(folder_path, filename, json_data)
+        process_json_data(json_data)  # Process the JSON data after saving
     else:
         print(f"Failed to fetch data: {response.status_code}")
 
+def process_json_data(json_data):
+    # Extract relevant data and present it in a readable format
+    simplified_data = []
+
+    # Example: Extracting information about astronauts in space
+    if "people" in json_data:
+        simplified_data.append("Astronauts currently in space:\n")
+        for person in json_data["people"]:
+            name = person.get("name")
+            craft = person.get("craft")
+            simplified_data.append(f"- {name} aboard {craft}")
+    
+    # Add additional analysis as needed (e.g., other parts of the JSON)
+
+    # Save the simplified output to a text file
+    save_simplified_data_to_file('data-json', 'simplified_data.txt', simplified_data)
+
+def save_simplified_data_to_file(folder_path, filename, data):
+    folder_path = pathlib.Path(folder_path)
+    folder_path.mkdir(parents=True, exist_ok=True)
+    file_path = folder_path.joinpath(filename)
+    with file_path.open('w', encoding='utf-8') as file:
+        file.write("\n".join(data))
+    print(f"Simplified data saved to {file_path}")
+
 # Example usage
-fetch_and_write_json_data(data_path, 'data.json', 'http://api.open-notify.org/astros.json')
+fetch_and_write_json_data('data-json', 'data.json', 'http://api.open-notify.org/astros.json')

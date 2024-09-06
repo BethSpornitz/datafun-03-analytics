@@ -8,18 +8,15 @@ import os
 import json
 import re
 from collections import Counter
-import pandas as pd
 
 # External library imports (requires virtual environment)
 import requests
-
-# Ensure SSL certificates are handled properly
-import requests.packages.urllib3.contrib.pyopenssl
-requests.packages.urllib3.contrib.pyopenssl.inject_into_urllib3()
+import pandas as pd
 
 # Local module imports
 import bethspornitz_project_setup
 
+//ANCHOR - Declare Global Variables
 ###############################
 # Declare global variables
 ###############################
@@ -33,6 +30,7 @@ data_path = project_path.joinpath('data')
 # Create the data path if it doesn't exist
 data_path.mkdir(exist_ok=True)
 
+//ANCHOR - Create Prefixed Folders
 ###############################
 # Create prefixed folders
 ###############################
@@ -49,15 +47,18 @@ def create_prefixed_folders(folder_list: list, prefix: str) -> None:
 # Call function to create folders using a prefix
 folder_names = ['csv', 'excel', 'json', 'txt']
 prefix = 'data-'
-create_prefixed_folders(folder_names, prefix)
 
+//TODO - Move this down below with the other functions
+create_prefixed_folders(folder_names, prefix)  #Move this down below before the other functions##################
+
+//ANCHOR - TXT Code
 ##############################
 # TXT
 ##############################
 
 def write_txt_file(folder_name, filename, data):
     folder_path = pathlib.Path(folder_name)
-    folder_path.mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
+    folder_path.mkdir(parents=True, exist_ok=True)
     file_path = folder_path.joinpath(filename)
     with file_path.open('w', encoding='utf-8') as file:
         file.write(data)
@@ -72,10 +73,10 @@ def fetch_and_write_txt_data(folder_name, filename, url):
         print(f"Failed to fetch data: {response.status_code}")
 
 def process_text_data(text):
-    # Remove non-alphabetic characters and make lowercase
+    # Remove non-alphabetic characters and make lowercase - ensures all words are treated the same and ingores special characters
     text = re.sub(r'[^A-Za-z\s]', '', text).lower()
 
-    # Split the text into words
+    # Split the text into words - breaks strings of texts into smaller pieces - helps with data cleaning
     words = text.split()
 
     # Get word count and unique words using set
@@ -108,16 +109,19 @@ def analyze_text(folder_name, filename, url):
         # Append top 10 words by frequency
         for word, freq in sorted_word_freq[:10]:
             analysis += f"{word}: {freq}\n"
+//TODO - Add Additional Analysis
 
         # Save the analysis to a file
         write_txt_file(folder_name, f"analysis_{filename}", analysis)
 
+//TODO - Move these down below with other functions
 # Example usage
 fetch_and_write_txt_data('data-txt', 'data-txt.txt', 'https://www.gutenberg.org/cache/epub/1513/pg1513.txt')
 
 # Example usage
 analyze_text('data-txt', 'data-txt.txt', 'https://www.gutenberg.org/cache/epub/1513/pg1513.txt')
 
+//ANCHOR - Excel Code
 ##############################
 # Excel
 ##############################
@@ -126,9 +130,9 @@ def write_excel_file(folder_name, filename, data):
     file_path = pathlib.Path(folder_name).joinpath(filename)
     try:
         folder_path = pathlib.Path(folder_name)
-        folder_path.mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
+        folder_path.mkdir(parents=True, exist_ok=True)
         
-        # Attempt to open and write the file
+# Attempt to open and write the file - "e" stands for "error"
         with open(file_path, 'wb') as file:
             file.write(data)
             print(f"Excel data saved to {file_path}")
@@ -165,7 +169,7 @@ def fetch_and_write_excel_data(folder_name, filename, url):
 
 def analyze_excel_data(file_path):
     try:
-        # Load the Excel file into a pandas DataFrame using xlrd for .xls files
+        # Load the Excel file into a pandas DataFrame using xlrd for .xls files - must pip install xlrd
         df = pd.read_excel(file_path, engine='xlrd')
         
         # Display basic info about the data
@@ -180,17 +184,18 @@ def analyze_excel_data(file_path):
     except Exception as e:
         print(f"An error occurred while analyzing the Excel data: {e}")
 
+//TODO - Move this down below with the other functions
 # Example usage
 fetch_and_write_excel_data('data-excel', 'data-excel.xls', 'https://github.com/bharathirajatut/sample-excel-dataset/raw/master/cattle.xls')
 
-
+//ANCHOR - CSV Code
 ############################
 # CSV
 ###########################
 
 def write_csv_file(folder_path, filename, data):
     folder_path = pathlib.Path(folder_path)
-    folder_path.mkdir(parents=True, exist_ok=True)
+    folder_path.mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
     file_path = folder_path.joinpath(filename)
     with file_path.open('w', encoding='utf-8') as file:
         file.write(data)
@@ -200,12 +205,46 @@ def fetch_and_write_csv_data(folder_path, filename, url):
     response = requests.get(url)
     if response.status_code == 200:
         write_csv_file(folder_path, filename, response.text)
+        process_csv_data(folder_path, filename)  # Process data after saving
     else:
         print(f"Failed to fetch data: {response.status_code}")
 
+def process_csv_data(folder_path, filename):
+    # Load the CSV data using pandas
+    file_path = pathlib.Path(folder_path).joinpath(filename)
+    df = pd.read_csv(file_path)
+    
+    # Perform basic analysis
+    insights = []
+
+    # Example: Data Preview and Summary Statistics
+    insights.append("Data Preview:\n")
+    insights.append(df.head().to_string())  # Add first few rows
+
+    insights.append("\n\nSummary Statistics:\n")
+    insights.append(df.describe().to_string())  # Add summary stats for numeric columns
+
+    # Example: Analyzing specific column (e.g., Happiness Score)
+    if 'Happiness Score' in df.columns:
+        avg_happiness = df['Happiness Score'].mean()
+        insights.append(f"\n\nAverage Happiness Score: {avg_happiness:.2f}")
+
+    //TODO - Add more analysis
+
+    # Save insights to a text file
+    save_insights_to_file(folder_path, 'insights.txt', insights)
+
+def save_insights_to_file(folder_path, filename, insights):
+    file_path = pathlib.Path(folder_path).joinpath(filename)
+    with file_path.open('w', encoding='utf-8') as file:
+        file.write("\n".join(insights))
+    print(f"Insights saved to {file_path}")
+
+//TODO - Add this below
 # Example usage
 fetch_and_write_csv_data('data-csv', 'data-csv.csv', 'https://raw.githubusercontent.com/MainakRepositor/Datasets/master/World%20Happiness%20Data/2020.csv')
 
+//ANCHOR - JSON Code
 ################
 # JSON
 ###############
@@ -223,12 +262,40 @@ def fetch_and_write_json_data(folder_path, filename, url):
     if response.status_code == 200:
         json_data = response.json()  # Parse the JSON response content
         write_json_file(folder_path, filename, json_data)
+        process_json_data(json_data)  # Process the JSON data after saving
     else:
         print(f"Failed to fetch data: {response.status_code}")
 
-# Example usage
-fetch_and_write_json_data(data_path, 'data.json', 'http://api.open-notify.org/astros.json')
+def process_json_data(json_data):
+    # Extract relevant data and present it in a readable format
+    simplified_data = []
 
+    # Example: Extracting information about astronauts in space
+    if "people" in json_data:
+        simplified_data.append("Astronauts currently in space:\n")
+        for person in json_data["people"]:
+            name = person.get("name")
+            craft = person.get("craft")
+            simplified_data.append(f"- {name} aboard {craft}")
+    
+//TODO - Add Additional Analysis
+
+    # Save the simplified output to a text file
+    save_simplified_data_to_file('data-json', 'simplified_data.txt', simplified_data)
+
+def save_simplified_data_to_file(folder_path, filename, data):
+    folder_path = pathlib.Path(folder_path)
+    folder_path.mkdir(parents=True, exist_ok=True)
+    file_path = folder_path.joinpath(filename)
+    with file_path.open('w', encoding='utf-8') as file:
+        file.write("\n".join(data))
+    print(f"Simplified data saved to {file_path}")
+
+//TODO - Move this below
+# Example usage
+fetch_and_write_json_data('data-json', 'data.json', 'http://api.open-notify.org/astros.json')
+
+//ANCHOR - Defining Main Function
 """
 #####################################sou
 # Define a main() function for this module.
