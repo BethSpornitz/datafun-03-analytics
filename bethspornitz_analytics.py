@@ -40,7 +40,7 @@ prefix = 'data-'
 
 # Call the function correctly (import first, then call)
 bethspornitz_project_setup.create_prefixed_folders(folder_names, prefix)
-
+'''
 ##############################
 # TXT
 ##############################
@@ -103,7 +103,7 @@ def analyze_text(folder_name, filename, url):
             f"Total Letter Count: {letter_count}\n\n"
             "Top 10 Most Frequent Words:\n"
         )
-        
+
     # Append top 10 words by frequency
         for word, freq in sorted_word_freq[:10]:
             analysis += f"{word}: {freq}\n"
@@ -113,11 +113,10 @@ def analyze_text(folder_name, filename, url):
         for word in longest_words:
             analysis += f"{word}\n"
 
-
-
         # Save the analysis to a file
         write_txt_file(folder_name, f"analysis_{filename}", analysis)
 
+#TODO:  Move these down
 # Example usage for TXT
 fetch_and_write_txt_data('data-txt', 'data-txt.txt', 'https://www.gutenberg.org/cache/epub/1513/pg1513.txt')
 analyze_text('data-txt', 'data-txt.txt', 'https://www.gutenberg.org/cache/epub/1513/pg1513.txt')
@@ -128,6 +127,7 @@ fetch_and_write_txt_data('data-txt', 'data-txt.txt', 'https://www.gutenberg.org/
 
 # Example usage
 analyze_text('data-txt', 'data-txt.txt', 'https://www.gutenberg.org/cache/epub/1513/pg1513.txt')
+'''
 
 ##############################
 # Excel
@@ -174,17 +174,52 @@ def fetch_and_write_excel_data(folder_name, filename, url):
     finally:
         print("Fetch operation attempted.")
 
-def analyze_excel_data(file_path):
+def save_analysis_results_to_txt(folder_name, filename, analysis):
+    folder_path = pathlib.Path(folder_name)
+    folder_path.mkdir(parents=True, exist_ok=True)
+    file_path = folder_path.joinpath(filename)
+    
+    with open(file_path, 'w', encoding='utf-8') as file:
+        file.write(analysis)
+        print(f"Analysis results saved to {file_path}")
+
+def save_dataframe_to_excel(folder_name, filename, df):
+    file_path = pathlib.Path(folder_name).joinpath(filename)
+    folder_path = pathlib.Path(folder_name)
+    folder_path.mkdir(parents=True, exist_ok=True)
+
+    # Save DataFrame to Excel
+    df.to_excel(file_path, index=False)
+    print(f"Excel data saved to {file_path}")
+
+def analyze_excel_data(file_path, output_folder='data-output'):
     try:
-        # Load the Excel file into a pandas DataFrame using xlrd for .xls files - must pip install xlrd
+        # Load the Excel file into a pandas DataFrame
         df = pd.read_excel(file_path, engine='xlrd')
         
-        # Display basic info about the data
-        print("\nData Preview:")
-        print(df.head())  # Show the first 5 rows of the data
+        # Inspect column names to identify valid columns
+        print("\nColumn Names:\n")
+        print(df.columns)
+
+        # Create a text analysis report
+        analysis = "\nData Preview:\n"
+        analysis += df.head().to_string()  # Convert data preview to string for saving
         
-        print("\nSummary Statistics:")
-        print(df.describe())  # Show summary statistics for numerical columns
+        analysis += "\n\nSummary Statistics:\n"
+        analysis += df.describe().to_string()  # Convert summary stats to string
+
+        # Check Missing Data
+        analysis += "\n\nMissing Data:\n"
+        analysis += df.isnull().sum().to_string()
+
+        # Save the text report
+        save_analysis_results_to_txt(output_folder, 'excel_analysis.txt', analysis)
+
+        # Example: Plotting a histogram
+        import matplotlib.pyplot as plt
+        df['c1'].hist()  # Replace 'c1' with the appropriate column
+        plt.savefig(f'{output_folder}/histogram.png')  # Save plot as an image
+        plt.show()
         
 #TODO: Perform any additional analysis here
         
@@ -195,7 +230,7 @@ def analyze_excel_data(file_path):
 # Example usage
 fetch_and_write_excel_data('data-excel', 'data-excel.xls', 'https://github.com/bharathirajatut/sample-excel-dataset/raw/master/cattle.xls')
 
-
+'''
 ############################
 # CSV
 ###########################
@@ -299,7 +334,7 @@ def save_simplified_data_to_file(folder_path, filename, data):
 #TODO: Move this below
 # Example usage
 fetch_and_write_json_data('data-json', 'data.json', 'http://api.open-notify.org/astros.json')
-
+'''
 
 """
 #####################################sou
