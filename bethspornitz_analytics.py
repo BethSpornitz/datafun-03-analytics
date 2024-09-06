@@ -30,28 +30,16 @@ data_path = project_path.joinpath('data')
 # Create the data path if it doesn't exist
 data_path.mkdir(exist_ok=True)
 
-
-###############################
+##############################
 # Create prefixed folders
 ###############################
-
-def create_prefixed_folders(folder_list: list, prefix: str) -> None:
-    for folder_name in folder_list:
-        # Create the full folder name with prefix
-        full_folder_name = f"{prefix}{folder_name}"
-        # Create the directory
-        os.makedirs(full_folder_name, exist_ok=True)
-        # Print the confirmation message
-        print(f"Created folder: {full_folder_name}")
 
 # Call function to create folders using a prefix
 folder_names = ['csv', 'excel', 'json', 'txt']
 prefix = 'data-'
 
-#TODO: Move this down below with the other functions
-create_prefixed_folders(folder_names, prefix)  
-#TODO:#Move this down below before the other functions##################
-
+# Call the function correctly (import first, then call)
+bethspornitz_project_setup.create_prefixed_folders(folder_names, prefix)
 
 ##############################
 # TXT
