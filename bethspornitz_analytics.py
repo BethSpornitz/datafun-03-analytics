@@ -40,7 +40,8 @@ prefix = 'data-'
 
 # Call the function correctly (import first, then call)
 bethspornitz_project_setup.create_prefixed_folders(folder_names, prefix)
-'''
+
+"""
 ##############################
 # TXT
 ##############################
@@ -127,8 +128,7 @@ fetch_and_write_txt_data('data-txt', 'data-txt.txt', 'https://www.gutenberg.org/
 
 # Example usage
 analyze_text('data-txt', 'data-txt.txt', 'https://www.gutenberg.org/cache/epub/1513/pg1513.txt')
-'''
-'''
+
 ##############################
 # Excel
 ##############################
@@ -228,7 +228,7 @@ def analyze_excel_data(file_path, output_folder='data-output'):
 # Example usage
 fetch_and_write_excel_data('data-excel', 'data-excel.xls', 'https://github.com/bharathirajatut/sample-excel-dataset/raw/master/cattle.xls')
 
-'''
+
 ############################
 # CSV
 ###########################
@@ -305,7 +305,7 @@ def save_insights_to_file(folder_path, filename, insights):
 
 # Example usage
 fetch_and_write_csv_data('data-csv', 'data-csv.csv', 'https://raw.githubusercontent.com/MainakRepositor/Datasets/master/World%20Happiness%20Data/2020.csv')
-'''
+"""
 ################
 # JSON
 ###############
@@ -339,7 +339,9 @@ def process_json_data(json_data):
             craft = person.get("craft")
             simplified_data.append(f"- {name} aboard {craft}")
     
-#TODO:Add Additional Analysis
+# Example: Count the number of astronauts
+    num_astronauts = len(json_data.get("people", []))
+    simplified_data.append(f"\nTotal number of astronauts in space: {num_astronauts}")
 
     # Save the simplified output to a text file
     save_simplified_data_to_file('data-json', 'simplified_data.txt', simplified_data)
@@ -355,7 +357,7 @@ def save_simplified_data_to_file(folder_path, filename, data):
 #TODO: Move this below
 # Example usage
 fetch_and_write_json_data('data-json', 'data.json', 'http://api.open-notify.org/astros.json')
-'''
+
 
 """
 #####################################sou
