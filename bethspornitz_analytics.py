@@ -82,7 +82,11 @@ def process_text_data(text):
     # Count the total number of alphabetic characters (letters)
     letter_count = sum(1 for char in text if char.isalpha())
 
-    return word_count, unique_words, sorted_word_freq, letter_count
+    # Find the longest words
+    longest_words = sorted(set(words), key=len, reverse=True)[:10]
+
+    return word_count, unique_words, sorted_word_freq, letter_count, longest_words
+
 
 def analyze_text(folder_name, filename, url):
     # Fetch the text data from the URL
@@ -90,7 +94,7 @@ def analyze_text(folder_name, filename, url):
     
     if text_data:
         # Process the text data
-        word_count, unique_words, sorted_word_freq, letter_count = process_text_data(text_data)
+        word_count, unique_words, sorted_word_freq, letter_count, longest_words = process_text_data(text_data)
 
         # Prepare the analysis results
         analysis = (
@@ -99,10 +103,17 @@ def analyze_text(folder_name, filename, url):
             f"Total Letter Count: {letter_count}\n\n"
             "Top 10 Most Frequent Words:\n"
         )
-
-         # Append top 10 words by frequency
+        
+    # Append top 10 words by frequency
         for word, freq in sorted_word_freq[:10]:
             analysis += f"{word}: {freq}\n"
+
+    # Append longest words to the analysis
+        analysis += "\nTop 10 Longest Words:\n"
+        for word in longest_words:
+            analysis += f"{word}\n"
+
+
 
         # Save the analysis to a file
         write_txt_file(folder_name, f"analysis_{filename}", analysis)
