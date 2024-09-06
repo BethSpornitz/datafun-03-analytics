@@ -16,7 +16,7 @@ import pandas as pd
 # Local module imports
 import bethspornitz_project_setup
 
-//ANCHOR - Declare Global Variables
+
 ###############################
 # Declare global variables
 ###############################
@@ -30,7 +30,7 @@ data_path = project_path.joinpath('data')
 # Create the data path if it doesn't exist
 data_path.mkdir(exist_ok=True)
 
-//ANCHOR - Create Prefixed Folders
+
 ###############################
 # Create prefixed folders
 ###############################
@@ -48,10 +48,11 @@ def create_prefixed_folders(folder_list: list, prefix: str) -> None:
 folder_names = ['csv', 'excel', 'json', 'txt']
 prefix = 'data-'
 
-//TODO - Move this down below with the other functions
-create_prefixed_folders(folder_names, prefix)  #Move this down below before the other functions##################
+#TODO: Move this down below with the other functions
+create_prefixed_folders(folder_names, prefix)  
+#TODO:#Move this down below before the other functions##################
 
-//ANCHOR - TXT Code
+
 ##############################
 # TXT
 ##############################
@@ -109,19 +110,18 @@ def analyze_text(folder_name, filename, url):
         # Append top 10 words by frequency
         for word, freq in sorted_word_freq[:10]:
             analysis += f"{word}: {freq}\n"
-//TODO - Add Additional Analysis
+#TODO Add Additional Analysis
 
         # Save the analysis to a file
         write_txt_file(folder_name, f"analysis_{filename}", analysis)
 
-//TODO - Move these down below with other functions
+#TODO:Move these down below with other functions
 # Example usage
 fetch_and_write_txt_data('data-txt', 'data-txt.txt', 'https://www.gutenberg.org/cache/epub/1513/pg1513.txt')
 
 # Example usage
 analyze_text('data-txt', 'data-txt.txt', 'https://www.gutenberg.org/cache/epub/1513/pg1513.txt')
 
-//ANCHOR - Excel Code
 ##############################
 # Excel
 ##############################
@@ -179,16 +179,16 @@ def analyze_excel_data(file_path):
         print("\nSummary Statistics:")
         print(df.describe())  # Show summary statistics for numerical columns
         
-        # Perform any additional analysis here
+#TODO: Perform any additional analysis here
         
     except Exception as e:
         print(f"An error occurred while analyzing the Excel data: {e}")
 
-//TODO - Move this down below with the other functions
+#TODO:Move this down below with the other functions
 # Example usage
 fetch_and_write_excel_data('data-excel', 'data-excel.xls', 'https://github.com/bharathirajatut/sample-excel-dataset/raw/master/cattle.xls')
 
-//ANCHOR - CSV Code
+
 ############################
 # CSV
 ###########################
@@ -229,7 +229,7 @@ def process_csv_data(folder_path, filename):
         avg_happiness = df['Happiness Score'].mean()
         insights.append(f"\n\nAverage Happiness Score: {avg_happiness:.2f}")
 
-    //TODO - Add more analysis
+#TODO: Add more analysis
 
     # Save insights to a text file
     save_insights_to_file(folder_path, 'insights.txt', insights)
@@ -240,11 +240,11 @@ def save_insights_to_file(folder_path, filename, insights):
         file.write("\n".join(insights))
     print(f"Insights saved to {file_path}")
 
-//TODO - Add this below
+#TODO:Add this below
 # Example usage
 fetch_and_write_csv_data('data-csv', 'data-csv.csv', 'https://raw.githubusercontent.com/MainakRepositor/Datasets/master/World%20Happiness%20Data/2020.csv')
 
-//ANCHOR - JSON Code
+
 ################
 # JSON
 ###############
@@ -278,7 +278,7 @@ def process_json_data(json_data):
             craft = person.get("craft")
             simplified_data.append(f"- {name} aboard {craft}")
     
-//TODO - Add Additional Analysis
+#TODO:Add Additional Analysis
 
     # Save the simplified output to a text file
     save_simplified_data_to_file('data-json', 'simplified_data.txt', simplified_data)
@@ -291,11 +291,11 @@ def save_simplified_data_to_file(folder_path, filename, data):
         file.write("\n".join(data))
     print(f"Simplified data saved to {file_path}")
 
-//TODO - Move this below
+#TODO: Move this below
 # Example usage
 fetch_and_write_json_data('data-json', 'data.json', 'http://api.open-notify.org/astros.json')
 
-//ANCHOR - Defining Main Function
+
 """
 #####################################sou
 # Define a main() function for this module.
