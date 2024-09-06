@@ -38,14 +38,16 @@ data_path.mkdir(exist_ok=True)
 folder_names = ['csv', 'excel', 'json', 'txt']
 prefix = 'data-'
 
-# Call the function correctly (import first, then call)
+# Call the function (import first, then call)
 bethspornitz_project_setup.create_prefixed_folders(folder_names, prefix)
 
-"""
+
 ##############################
 # TXT
 ##############################
 
+
+# Write data to a text file
 def write_txt_file(folder_name, filename, data):
     folder_path = pathlib.Path(folder_name)
     folder_path.mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
@@ -54,6 +56,7 @@ def write_txt_file(folder_name, filename, data):
         file.write(data)
         print(f"Text data saved to {file_path}")
 
+# Fetch data from a text file
 def fetch_and_write_txt_data(folder_name, filename, url):
     response = requests.get(url)
     if response.status_code == 200:
@@ -63,39 +66,33 @@ def fetch_and_write_txt_data(folder_name, filename, url):
         print(f"Failed to fetch data: {response.status_code}")
         return None
 
-def process_text_data(text):
-    # Remove non-alphabetic characters and make lowercase
-    clean_text = re.sub(r'[^A-Za-z\s]', '', text).lower()
-
-    # Split the text into words
-    words = clean_text.split()
-
-    # Get word count and unique words using set
-    word_count = len(words)
-    unique_words = set(words)
-
-    # Get frequency of each word
-    word_freq = Counter(words)
-
-    # Sort words by frequency
-    sorted_word_freq = sorted(word_freq.items(), key=lambda x: x[1], reverse=True)
-
-    # Count the total number of alphabetic characters (letters)
-    letter_count = sum(1 for char in text if char.isalpha())
-
-    # Find the longest words
-    longest_words = sorted(set(words), key=len, reverse=True)[:10]
-
-    return word_count, unique_words, sorted_word_freq, letter_count, longest_words
-
-
-def analyze_text(folder_name, filename, url):
+# Process and analyze text data
+def process_text(folder_name, filename, url):
     # Fetch the text data from the URL
     text_data = fetch_and_write_txt_data(folder_name, filename, url)
     
     if text_data:
-        # Process the text data
-        word_count, unique_words, sorted_word_freq, letter_count, longest_words = process_text_data(text_data)
+        # Remove non-alphabetic characters and make lowercase
+        clean_text = re.sub(r'[^A-Za-z\s]', '', text_data).lower()
+
+        # Split the text into words
+        words = clean_text.split()
+
+        # Get word count and unique words using set
+        word_count = len(words)
+        unique_words = set(words)
+
+        # Get frequency of each word
+        word_freq = Counter(words)
+
+        # Sort words by frequency
+        sorted_word_freq = sorted(word_freq.items(), key=lambda x: x[1], reverse=True)
+
+        # Count the total number of alphabetic characters (letters)
+        letter_count = sum(1 for char in text_data if char.isalpha())
+
+        # Find the longest words
+        longest_words = sorted(set(words), key=len, reverse=True)[:10]
 
         # Prepare the analysis results
         analysis = (
@@ -105,11 +102,11 @@ def analyze_text(folder_name, filename, url):
             "Top 10 Most Frequent Words:\n"
         )
 
-    # Append top 10 words by frequency
+        # Append top 10 words by frequency
         for word, freq in sorted_word_freq[:10]:
             analysis += f"{word}: {freq}\n"
 
-    # Append longest words to the analysis
+        # Append longest words to the analysis
         analysis += "\nTop 10 Longest Words:\n"
         for word in longest_words:
             analysis += f"{word}\n"
@@ -117,17 +114,9 @@ def analyze_text(folder_name, filename, url):
         # Save the analysis to a file
         write_txt_file(folder_name, f"analysis_{filename}", analysis)
 
-#TODO:  Move these down
 # Example usage for TXT
-fetch_and_write_txt_data('data-txt', 'data-txt.txt', 'https://www.gutenberg.org/cache/epub/1513/pg1513.txt')
-analyze_text('data-txt', 'data-txt.txt', 'https://www.gutenberg.org/cache/epub/1513/pg1513.txt')
-
-#TODO:Move these down below with other functions
-# Example usage
-fetch_and_write_txt_data('data-txt', 'data-txt.txt', 'https://www.gutenberg.org/cache/epub/1513/pg1513.txt')
-
-# Example usage
-analyze_text('data-txt', 'data-txt.txt', 'https://www.gutenberg.org/cache/epub/1513/pg1513.txt')
+#TODO: Move this below:
+process_text('data-txt', 'data-txt.txt', 'https://www.gutenberg.org/cache/epub/1513/pg1513.txt')
 
 ##############################
 # Excel
