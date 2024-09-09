@@ -79,7 +79,7 @@ def process_txt_file(dataset_name, filename, url):
         letter_count = sum(1 for char in text_data if char.isalpha())
 
         # Find the longest words
-        longest_words = sorted(set(words), key=len, reverse=True)[:10]
+        longest_words = sorted(set(words), key=lambda x: len(x), reverse=True)[:10]
 
         # Prepare the analysis results
         analysis = (
