@@ -419,7 +419,7 @@ def main():
      '''Main function to demonstrate module capabilities.''' 
 
     # URLs for data
-txt_url = 'https://www.gutenberg.org/cache/epub/1513/pg1513.txt'
+romeo_and_juliet_txt_url = 'https://www.gutenberg.org/cache/epub/1513/pg1513.txt'
 csv_url = 'https://raw.githubusercontent.com/MainakRepositor/Datasets/master/World%20Happiness%20Data/2020.csv'
 excel_url = 'https://github.com/bharathirajatut/sample-excel-dataset/raw/master/cattle.xls'
 json_url = 'http://api.open-notify.org/astros.json'
@@ -427,14 +427,14 @@ princess_bride_url = 'https://www.evenmere.org/~bts/Random-Collected-Documents/p
 covid_url = 'https://raw.githubusercontent.com/datasets/covid-19/main/data/countries-aggregated.csv'
 
     # Folder names and filenames for data
-txt_folder_name = 'data-txt'
+romeo_and_juliet_txt_folder_name = 'romeo_and_juliet_data-txt'
 csv_folder_name = 'data-csv'
 excel_folder_name = 'data-excel'
 json_folder_name = 'data-json'
 princess_bride_folder_name = 'princess_bride-txt'
 covid_folder_name = 'covid-csv'
 
-txt_filename = 'data.txt'
+romeo_and_juliet_txt_filename = 'romeo_and_juliet_data.txt'
 csv_filename = 'data.csv'
 excel_filename = 'data.xls'
 json_filename = 'data.json'
@@ -442,7 +442,7 @@ princess_bride_filename = 'princess_bride.txt'
 covid_filename = 'covid.csv'
 
 # Process and analyze data
-process_txt_file(txt_folder_name, txt_filename, txt_url)
+process_txt_file(romeo_and_juliet_txt_folder_name, romeo_and_juliet_txt_filename, romeo_and_juliet_txt_url)
 process_csv_file(csv_folder_name, csv_filename, csv_url)
 process_excel_file(excel_folder_name, excel_filename, excel_url)
 process_json_file(json_folder_name,'data.json', json_url)
