@@ -27,8 +27,8 @@ data_path.mkdir(exist_ok=True)
 
 def create_folders_for_range(start_year: int, end_year: int) -> None:
     for year in range(start_year, end_year + 1):
-        folder_name = str(year)
-        os.makedirs(folder_name, exist_ok=True)
+        folder_path = str(year)
+        os.makedirs(folder_path, exist_ok=True)
         print(f"FUNCTION CALLED: create_folders_for_range with start_year={start_year} and end_year={end_year}")
 
 #####################################
@@ -37,14 +37,14 @@ def create_folders_for_range(start_year: int, end_year: int) -> None:
 ####################################
 
 def create_folders_from_list(folder_list: list, to_lowercase: bool = False, remove_spaces: bool = False) -> None:
-    for folder_name in folder_list:
+    for folder_path in folder_list:
         # Apply transformations
         if to_lowercase:
-            folder_name = folder_name.lower()
+            folder_path = folder_path.lower()
         if remove_spaces:
-            folder_name = folder_name.replace(" ", "_")
-        os.makedirs(folder_name, exist_ok=True)
-        print(f"FUNCTION CALLED: create_folders_from_list with '{folder_name}'")
+            folder_path = folder_path.replace(" ", "_")
+        os.makedirs(folder_path, exist_ok=True)
+        print(f"FUNCTION CALLED: create_folders_from_list with '{folder_path}'")
 
 #####################################
 # Define Function 3. List Comprehension: Create a function to create prefixed folders by transforming a list of names and combining each with a prefix (e.g., "data-").
@@ -53,13 +53,13 @@ def create_folders_from_list(folder_list: list, to_lowercase: bool = False, remo
 #####################################
 
 def create_prefixed_folders(folder_list: list, prefix: str) -> None:
-    for folder_name in folder_list:
+    for folder_path in folder_list:
         # Create the full folder name with prefix
-        full_folder_name = f"{prefix}_{folder_name}"
+        full_folder_path = f"{prefix}_{folder_path}"
         # Create the directory
-        os.makedirs(full_folder_name, exist_ok=True)
+        os.makedirs(full_folder_path, exist_ok=True)
         # Print the confirmation message
-        print(f"Created folder: {full_folder_name}")
+        print(f"Created folder: {full_folder_path}")
 
 #####################################
 # Define Function 4. While Loop: Write a function to create folders periodically (e.g., one folder every 5 seconds).
@@ -75,11 +75,11 @@ def create_folders_periodically(folder_count: int, duration_seconds: int) -> Non
 
     while created_folders < folder_count:
         # Construct the folder name
-        folder_name = f"{base_name}_{created_folders + 1}"
+        folder_path = f"{base_name}_{created_folders + 1}"
         
         # Create the folder
-        os.makedirs(folder_name, exist_ok=True)
-        print(f"Created folder: {folder_name}")
+        os.makedirs(folder_path, exist_ok=True)
+        print(f"Created folder: {folder_path}")
         
         # Increment the counter
         created_folders += 1
@@ -107,13 +107,13 @@ def main() -> None:
     create_folders_for_range(start_year=2020, end_year=2023)
 
     # Call function 2 to create folders given a list
-    folder_names = ['data-csv', 'data-excel', 'data-json']
-    create_folders_from_list(folder_names)
+    folder_paths = ['data-csv', 'data-excel', 'data-json']
+    create_folders_from_list(folder_paths)
 
     # Call function 3 to create folders using a prefix
-    folder_names = ['csv', 'excel', 'json']
+    folder_paths = ['csv', 'excel', 'json']
     prefix = 'data-'
-    create_prefixed_folders(folder_names, prefix)
+    create_prefixed_folders(folder_paths, prefix)
 
     # Call function 4 to create folders periodically using while loop
     create_folders_periodically(folder_count=3, duration_seconds=5)

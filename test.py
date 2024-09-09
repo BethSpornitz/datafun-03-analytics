@@ -37,8 +37,8 @@ data_path.mkdir(exist_ok=True)
 
 
 # Write data to a text file
-def write_txt_file(folder_name, filename, data):
-    folder_path = pathlib.Path(folder_name)
+def write_txt_file(folder_path, filename, data):
+    folder_path = pathlib.Path(folder_path)
     folder_path.mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
     file_path = folder_path.joinpath(filename)
     with file_path.open('w', encoding='utf-8') as file:
@@ -46,19 +46,19 @@ def write_txt_file(folder_name, filename, data):
         print(f"Text data saved to {file_path}")
 
 # Fetch data from a text file
-def fetch_and_write_txt_file(folder_name, filename, url):
+def fetch_and_write_txt_file(folder_path, filename, url):
     response = requests.get(url)
     if response.status_code == 200:
-        write_txt_file(folder_name, filename, response.text)
+        write_txt_file(folder_path, filename, response.text)
         return response.text
     else:
         print(f"Failed to fetch data: {response.status_code}")
         return None
 
 # Process and analyze text data
-def process_text_file(folder_name, filename, url):
+def process_text_file(folder_path, filename, url):
     # Fetch the text data from the URL
-    text_data = fetch_and_write_txt_file(folder_name, filename, url)
+    text_data = fetch_and_write_txt_file(folder_path, filename, url)
     
     if text_data:
         # Remove non-alphabetic characters and make lowercase
@@ -101,7 +101,7 @@ def process_text_file(folder_name, filename, url):
             analysis += f"{word}\n"
 
         # Save the analysis to a file
-        write_txt_file(folder_name, f"analysis_{filename}", analysis)
+        write_txt_file(folder_path, f"analysis_{filename}", analysis)
 
 # Example usage for TXT
 #TODO: Move this below:
@@ -116,10 +116,10 @@ import requests
 import pandas as pd
 import matplotlib.pyplot as plt
 
-def write_excel_file(folder_name, filename, data):
-    file_path = pathlib.Path(folder_name).joinpath(filename)
+def write_excel_file(folder_path, filename, data):
+    file_path = pathlib.Path(folder_path).joinpath(filename)
     try:
-        folder_path = pathlib.Path(folder_name)
+        folder_path = pathlib.Path(folder_path)
         folder_path.mkdir(parents=True, exist_ok=True)
         with open(file_path, 'wb') as file:
             file.write(data)
@@ -134,11 +134,11 @@ def write_excel_file(folder_name, filename, data):
         print("Write operation attempted.")
     return file_path  # Return the file path for further analysis
 
-def fetch_and_write_excel_file(folder_name, filename, url):
+def fetch_and_write_excel_file(folder_path, filename, url):
     try:
         response = requests.get(url)
         response.raise_for_status()  # Raise HTTPError for bad responses
-        file_path = write_excel_file(folder_name, filename, response.content)
+        file_path = write_excel_file(folder_path, filename, response.content)
         return file_path
     except requests.RequestException as e:
         print(f"RequestException occurred while fetching data: {e}")
@@ -150,17 +150,17 @@ def fetch_and_write_excel_file(folder_name, filename, url):
         print("Fetch operation attempted.")
     return None
 
-def save_analysis_results_to_txt(folder_name, filename, analysis):
-    folder_path = pathlib.Path(folder_name)
+def save_analysis_results_to_txt(folder_path, filename, analysis):
+    folder_path = pathlib.Path(folder_path)
     folder_path.mkdir(parents=True, exist_ok=True)
     file_path = folder_path.joinpath(filename)
     with open(file_path, 'w', encoding='utf-8') as file:
         file.write(analysis)
         print(f"Analysis results saved to {file_path}")
 
-def process_excel_file(folder_name, filename, url, output_folder='data-excel'):
+def process_excel_file(folder_path, filename, url, output_folder='data-excel'):
     # Fetch and write the Excel file
-    file_path = fetch_and_write_excel_file(folder_name, filename, url)
+    file_path = fetch_and_write_excel_file(folder_path, filename, url)
     
     if file_path:
         try:
@@ -220,10 +220,10 @@ process_excel_file('data-excel', 'data-excel.xls', 'https://github.com/bharathir
 ###########################
 
 
-def write_csv_file(folder_name, filename, data):
-    file_path = pathlib.Path(folder_name).joinpath(filename)
+def write_csv_file(folder_path, filename, data):
+    file_path = pathlib.Path(folder_path).joinpath(filename)
     try:
-        folder_path = pathlib.Path(folder_name)
+        folder_path = pathlib.Path(folder_path)
         folder_path.mkdir(parents=True, exist_ok=True)
         with open(file_path, 'wb') as file:
             file.write(data)
@@ -238,11 +238,11 @@ def write_csv_file(folder_name, filename, data):
         print("Write operation attempted.")
     return file_path  # Return the file path for further analysis
 
-def fetch_and_write_csv_file(folder_name, filename, url):
+def fetch_and_write_csv_file(folder_path, filename, url):
     try:
         response = requests.get(url)
         response.raise_for_status()  # Raise HTTPError for bad responses
-        file_path = write_csv_file(folder_name, filename, response.content)
+        file_path = write_csv_file(folder_path, filename, response.content)
         return file_path
     except requests.RequestException as e:
         print(f"RequestException occurred while fetching data: {e}")
@@ -254,17 +254,17 @@ def fetch_and_write_csv_file(folder_name, filename, url):
         print("Fetch operation attempted.")
     return None
 
-def save_analysis_results_to_txt(folder_name, filename, analysis):
-    folder_path = pathlib.Path(folder_name)
+def save_analysis_results_to_txt(folder_path, filename, analysis):
+    folder_path = pathlib.Path(folder_path)
     folder_path.mkdir(parents=True, exist_ok=True)
     file_path = folder_path.joinpath(filename)
     with open(file_path, 'w', encoding='utf-8') as file:
         file.write(analysis)
         print(f"Analysis results saved to {file_path}")
 
-def process_csv_file(folder_name, filename, url, output_folder='data-csv'):
+def process_csv_file(folder_path, filename, url, output_folder='data-csv'):
     # Fetch and write the CSV file
-    file_path = fetch_and_write_csv_file(folder_name, filename, url)
+    file_path = fetch_and_write_csv_file(folder_path, filename, url)
     
     if file_path:
         try:
@@ -379,10 +379,10 @@ def main():
     
     json_url = 'http://api.open-notify.org/astros.json'
 
-    txt_folder_name = 'data-txt'
-    csv_folder_name = 'data-csv'
-    excel_folder_name = 'data-excel' 
-    json_folder_name = 'data-json' 
+    txt_folder_path = 'data-txt'
+    csv_folder_path = 'data-csv'
+    excel_folder_path = 'data-excel' 
+    json_folder_path = 'data-json' 
 
     txt_filename = 'data.txt'
     csv_filename = 'data.csv'
@@ -390,10 +390,10 @@ def main():
     json_filename = 'data.json' 
 
 
-    process_txt_file(txt_folder_name,'data.txt', 'results_txt.txt')
-    process_excel_file(excel_folder_name,'data.xls', 'results_xls.txt')
-    process_csv_file(csv_folder_name,'data.csv', 'results_csv.txt')
-    process_json_file(json_folder_name,'data.json', 'results_json.txt')
+    process_txt_file(txt_folder_path,'data.txt', 'results_txt.txt')
+    process_excel_file(excel_folder_path,'data.xls', 'results_xls.txt')
+    process_csv_file(csv_folder_path,'data.csv', 'results_csv.txt')
+    process_json_file(json_folder_path,'data.json', 'results_json.txt')
 
     # Find some data you care about. What format is it? How will you ingest the data?
     # What do you want to extract and write? What export format will you use?

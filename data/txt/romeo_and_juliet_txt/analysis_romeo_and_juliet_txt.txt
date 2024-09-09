@@ -19,9 +19,9 @@ wwwgutenbergorglicense
 wwwgutenbergorgcontact
 wwwgutenbergorgdonate
 trademarkcopyright
-studybyandbygods
-neighbourstained
 unenforceability
+neighbourstained
+studybyandbygods
 servingcreatures
-wolvishravening
-merchantability
+wwwgutenbergorg
+machinereadable
