@@ -12,12 +12,12 @@ Project 3 focuses on developing proficiency in Git for version control, managing
 
 ## Installation
 
-Requires installation of:
-requests
-pandas
-matplotlib
-openpyxl
-xlrd
+Requires installation of:  
+requests  
+pandas  
+matplotlib  
+openpyxl  
+xlrd  
 
 ## Clone the Repository
 
