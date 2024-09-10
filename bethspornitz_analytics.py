@@ -9,6 +9,7 @@ import os
 import json
 import re
 from collections import Counter
+from bs4 import BeautifulSoup
 
 # External library imports (requires virtual environment)
 import requests
@@ -45,6 +46,8 @@ def write_txt_file(folder_path, filename, data):
 # Fetch data from a text file
 def fetch_and_write_txt_data(folder_path, filename, url):
     response = requests.get(url)
+     # Set the encoding explicitly to 'utf-8'
+    response.encoding = 'utf-8'  # You can adjust this if the content requires a different encoding
     if response.status_code == 200:
         write_txt_file(folder_path, filename, response.text)
         return response.text
@@ -59,8 +62,15 @@ def process_txt_file(dataset_name, filename, url):
     text_data = fetch_and_write_txt_data(folder_path, filename, url)
     
     if text_data:
+
+        # Replace hyphens and slashes with spaces to prevent word combinations
+        text_data = text_data.replace('-', ' ').replace('/', ' ')
+
         # Remove non-alphabetic characters and make lowercase
         clean_text = re.sub(r'[^A-Za-z\s]', '', text_data).lower()
+
+        # Normalize multiple spaces and other whitespace characters
+        clean_text = re.sub(r'\s+', ' ', clean_text).strip()
 
         # Split the text into words
         words = clean_text.split()
@@ -78,9 +88,6 @@ def process_txt_file(dataset_name, filename, url):
         # Count the total number of alphabetic characters (letters)
         letter_count = sum(1 for char in text_data if char.isalpha())
 
-        # Find the longest words
-        longest_words = sorted(set(words), key=lambda x: len(x), reverse=True)[:10]
-
         # Prepare the analysis results
         analysis = (
             f"Total Word Count: {word_count}\n"
@@ -92,11 +99,6 @@ def process_txt_file(dataset_name, filename, url):
         # Append top 10 words by frequency
         for word, freq in sorted_word_freq[:10]:
             analysis += f"{word}: {freq}\n"
-
-        # Append longest words to the analysis
-        analysis += "\nTop 10 Longest Words:\n"
-        for word in longest_words:
-            analysis += f"{word}\n"
 
         # Save the analysis to a file
         write_txt_file(folder_path, f"analysis_{filename}", analysis)

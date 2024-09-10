@@ -1,27 +1,15 @@
-Total Word Count: 12151
-Unique Words Count: 2438
+Total Word Count: 13277
+Unique Words Count: 2298
 Total Letter Count: 62728
 
 Top 10 Most Frequent Words:
+strong: 699
 the: 468
+em: 374
 you: 373
 i: 287
-to: 261
-a: 252
+a: 272
+to: 262
 and: 223
-in: 208
+in: 211
 is: 154
-of: 131
-that: 123
-
-Top 10 Longest Words:
-hrefhttpwebmiteduericdingwwwhomehtmleric
-nameopeningscenehopening
-stronggrandfatherstrong
-hrefopeningsceneopening
-stronghumperdinkstrong
-strongclergymanstrong
-strongbuttercupstrong
-iamwaitingforvizzini
-strongnarratorstrong
-strongwestleystrong
