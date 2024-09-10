@@ -9,7 +9,6 @@ import os
 import json
 import re
 from collections import Counter
-from bs4 import BeautifulSoup
 
 # External library imports (requires virtual environment)
 import requests
